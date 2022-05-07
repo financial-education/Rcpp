@@ -1,0 +1,8 @@
+#+title: An Intro to Rcpp
+#+author: Matt Brigida, Ph.D.
+
+Higher level languages such as /R/ and /Python/ are easy and quick to write, though they are slow when executed[fn:1].  
+
+* Footnotes
+
+[fn:1]Often writing the code is the major speed bottleneck, and so in sum high level languages can be very 'fast'.
