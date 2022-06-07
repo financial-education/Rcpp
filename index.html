@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-06-07 Tue 11:33 -->
+<!-- 2022-06-07 Tue 13:28 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>An Intro to Rcpp</title>
@@ -197,9 +197,140 @@
 <body>
 <div id="content" class="content">
 <h1 class="title">An Intro to Rcpp</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgfe5dc5e">1. Sumall</a></li>
+</ul>
+</div>
+</div>
 <p>
 Higher level languages such as <i>R</i> and <i>Python</i> are easy and quick to write, though they are slow when executed<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>.  Lower level languages<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>, such as <i>C</i> and <i>C++</i> take more time to write, but create binaries which are considerably faster when executes.  So often high level languages are used to prototype an idea, but once you know what you want to do it is implemented in a lower level language.
 </p>
+
+<div id="outline-container-orgfe5dc5e" class="outline-2">
+<h2 id="orgfe5dc5e"><span class="section-number-2">1.</span> Sumall</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Let's look at the performance of the sumall function across C++, R, and Python.  
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">timing structure from here: https://stackoverflow.com/questions/22387586/measuring-execution-time-of-a-function-in-c</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;chrono&gt;</span>
+
+<span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Only needed for the sake of this example.</span><span style="color: #5B6268;"> */</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;iostream&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;thread&gt;</span>
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">sumall</span>(<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">x</span>)
+{
+  <span style="color: #51afef;">if</span>(x == 1)
+    {<span style="color: #51afef;">return</span> 1;}
+  <span style="color: #51afef;">else</span>
+    {<span style="color: #51afef;">return</span> x + sumall(x - 1);}
+}
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span>()
+{
+    <span style="color: #51afef;">using</span> <span style="color: #a9a1e1;">std</span>::<span style="color: #a9a1e1;">chrono</span>::<span style="color: #a9a1e1;">high_resolution_clock</span>;
+    <span style="color: #51afef;">using</span> <span style="color: #a9a1e1;">std</span>::<span style="color: #a9a1e1;">chrono</span>::<span style="color: #a9a1e1;">duration_cast</span>;
+    <span style="color: #51afef;">using</span> <span style="color: #a9a1e1;">std</span>::<span style="color: #a9a1e1;">chrono</span>::<span style="color: #a9a1e1;">duration</span>;
+    <span style="color: #51afef;">using</span> <span style="color: #a9a1e1;">std</span>::<span style="color: #a9a1e1;">chrono</span>::<span style="color: #a9a1e1;">milliseconds</span>;
+
+    <span style="color: #51afef;">auto</span> <span style="color: #dcaeea;">t1</span> = <span style="color: #a9a1e1;">high_resolution_clock</span>::now();
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">answer</span> = sumall(99999);
+    <span style="color: #51afef;">auto</span> <span style="color: #dcaeea;">t2</span> = <span style="color: #a9a1e1;">high_resolution_clock</span>::now();
+
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Getting number of milliseconds as a double.</span><span style="color: #5B6268;"> */</span>
+    <span style="color: #ECBE7B;">duration</span>&lt;<span style="color: #ECBE7B;">double</span>, <span style="color: #a9a1e1;">std</span>::milli&gt; <span style="color: #dcaeea;">ms_double</span> = t2 - t1;
+
+    <span style="color: #a9a1e1;">std</span>::cout &lt;&lt; <span style="color: #98be65;">"The answer is "</span> &lt;&lt; answer &lt;&lt; <span style="color: #98be65;">"\n"</span>;
+    <span style="color: #a9a1e1;">std</span>::cout &lt;&lt; <span style="color: #98be65;">"The calculation took "</span> &lt;&lt; ms_double.count() &lt;&lt; <span style="color: #98be65;">"ms\n"</span>;
+    <span style="color: #51afef;">return</span> 0;
+}
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">The</td>
+<td class="org-left">answer</td>
+<td class="org-left">is</td>
+<td class="org-right">704982704</td>
+</tr>
+
+<tr>
+<td class="org-left">The</td>
+<td class="org-left">calculation</td>
+<td class="org-left">took</td>
+<td class="org-right">1.1935ms</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<div class="org-src-container">
+<pre class="src src-R">start.time <span style="color: #a9a1e1;">&lt;-</span> Sys.time()
+<span style="color: #c678dd;">sumall</span> <span style="color: #a9a1e1;">&lt;-</span> <span style="color: #51afef;">function</span>(x){
+<span style="color: #51afef;">if</span> (x == 1)
+{<span style="color: #51afef;">return</span>(1)}
+<span style="color: #51afef;">else</span>
+{<span style="color: #51afef;">return</span>(x + sumall(x - 1))}
+}
+sumall(99999)
+end.time <span style="color: #a9a1e1;">&lt;-</span> Sys.time()
+time.taken <span style="color: #a9a1e1;">&lt;-</span> end.time - start.time
+time.taken
+</pre>
+</div>
+
+<blockquote>
+<p>
+Error: evaluation nested too deeply: infinite recursion / options(expressions=)?
+Execution halted
+</p>
+</blockquote>
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #51afef;">import</span> time
+
+<span style="color: #dcaeea;">start</span> = time.time()
+<span style="color: #51afef;">def</span> <span style="color: #c678dd;">sumall</span>(x):
+    <span style="color: #51afef;">if</span> x == 1:
+        <span style="color: #51afef;">return</span>(1)
+    <span style="color: #51afef;">else</span>:
+        <span style="color: #51afef;">return</span>(x + sumall(x - 1))
+
+sumall(99999)
+end = time.time()
+<span style="color: #c678dd;">print</span>(end - start)
+</pre>
+</div>
+
+
+<blockquote>
+<p>
+RecursionError: maximum recursion depth exceeded in comparison
+</p>
+</blockquote>
+</div>
+</div>
 <div id="footnotes">
 <h2 class="footnotes">Footnotes: </h2>
 <div id="text-footnotes">
@@ -217,7 +348,7 @@ High and low level means how far the code is from the machine.  Think of the mac
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Matt Brigida, Ph.D.</p>
-<p class="date">Created: 2022-06-07 Tue 11:33</p>
+<p class="date">Created: 2022-06-07 Tue 13:28</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

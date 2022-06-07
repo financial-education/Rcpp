@@ -3,6 +3,93 @@
 
 Higher level languages such as /R/ and /Python/ are easy and quick to write, though they are slow when executed[fn:1].  Lower level languages[fn:2], such as /C/ and /C++/ take more time to write, but create binaries which are considerably faster when executes.  So often high level languages are used to prototype an idea, but once you know what you want to do it is implemented in a lower level language.
 
+* Sumall
+
+Let's look at the performance of the sumall function across C++, R, and Python.  
+
+#+begin_src C++ :exports both
+// timing structure from here: https://stackoverflow.com/questions/22387586/measuring-execution-time-of-a-function-in-c
+#include <chrono>
+
+/* Only needed for the sake of this example. */
+#include <iostream>
+#include <thread>
+    
+int sumall(int x)
+{
+  if(x == 1)
+    {return 1;}
+  else
+    {return x + sumall(x - 1);}
+}
+
+int main()
+{
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
+
+    auto t1 = high_resolution_clock::now();
+    int answer = sumall(99999);
+    auto t2 = high_resolution_clock::now();
+
+    /* Getting number of milliseconds as a double. */
+    duration<double, std::milli> ms_double = t2 - t1;
+
+    std::cout << "The answer is " << answer << "\n";
+    std::cout << "The calculation took " << ms_double.count() << "ms\n";
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+| The | answer      | is   | 704982704 |
+| The | calculation | took | 1.23108ms |
+
+
+
+#+begin_src R :results value
+start.time <- Sys.time()
+sumall <- function(x){
+if (x == 1)
+{return(1)}
+else
+{return(x + sumall(x - 1))}
+}
+sumall(99999)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
+#+end_src
+
+#+begin_quote
+Error: evaluation nested too deeply: infinite recursion / options(expressions=)?
+Execution halted
+#+end_quote
+
+
+#+begin_src python
+import time
+
+start = time.time()
+def sumall(x):
+    if x == 1:
+        return(1)
+    else:
+        return(x + sumall(x - 1))
+
+sumall(99999)
+end = time.time()
+print(end - start)
+#+end_src
+
+
+#+begin_quote
+RecursionError: maximum recursion depth exceeded in comparison
+#+end_quote
+
+
 * Footnotes
 [fn:2]High and low level means how far the code is from the machine.  Think of the machine as the base.  Higher level languages are farther from the machine than lower level languages. 
 
