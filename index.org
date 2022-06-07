@@ -1,11 +1,24 @@
 #+title: An Intro to Rcpp
 #+author: Matt Brigida, Ph.D.
+#+email: matthew.brigida@sunypoly.edu
+#+PROPERTY: header-args :eval yes
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+
+
+# #+options: toc:nil
+
 
 Higher level languages such as /R/ and /Python/ are easy and quick to write, though they are slow when executed[fn:1].  Lower level languages[fn:2], such as /C/ and /C++/ take more time to write, but create binaries which are considerably faster when executes.  So often high level languages are used to prototype an idea, but once you know what you want to do it is implemented in a lower level language.
 
 * Sumall
 
-Let's look at the performance of the sumall function across C++, R, and Python.  
+Let's look at the performance of the sumall function across C++, R, and Python.  Given an integer argument /x/, the function sums all the integers from 1 to /x/.
+
+$$sumall(x) = \sum_{i = 1}^x$$
+
+We'll implement this function using recursion below.  
+
+** C++
 
 #+begin_src C++ :exports both
 // timing structure from here: https://stackoverflow.com/questions/22387586/measuring-execution-time-of-a-function-in-c
@@ -47,7 +60,9 @@ int main()
 | The | answer      | is   | 704982704 |
 | The | calculation | took | 1.23108ms |
 
+So the calculation of /sumall(999999)/ takes 1.23 milliseconds.
 
+** R
 
 #+begin_src R :results value
 start.time <- Sys.time()
@@ -68,6 +83,7 @@ Error: evaluation nested too deeply: infinite recursion / options(expressions=)?
 Execution halted
 #+end_quote
 
+So the calculation of /sumall(99999)/ is not possible in /R/, at least using our recursive method.  The recursion nests too deeply.  Though the calculation is possible in C++.
 
 #+begin_src python
 import time
@@ -89,6 +105,38 @@ print(end - start)
 RecursionError: maximum recursion depth exceeded in comparison
 #+end_quote
 
+Again, the calculation of /sumall(99999)/ is not possible in /Python/, due to the recursion exceeding the maximum depth.  So here we see an example of a calculation that is not just slower in Python/R relative to C++, but cannot be done.
+
+** RCpp
+
+Now let's implement /sumall/ in RCpp.
+
+#+begin_src R :exports both :results output
+library(Rcpp)
+
+start.time <- Sys.time()
+cppFunction('int sumall(int x)
+{
+  if(x == 1)
+    {return 1;}
+  else
+    {return x + sumall(x - 1);}
+}
+')
+
+print(paste0("The value of sumall(99999) is ", sumall(99999)))
+
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+print(paste0("And it took ", round(time.taken, 2), " seconds."))
+
+#+end_src
+
+#+RESULTS:
+: [1] "The value of sumall(99999) is 704982704"
+: [1] "And it took 3.45 seconds."
+
+And there we go, we can now call the /sumall/ function in R, and because it was implemented in C++ we don't fail due to excessive recursion. Note, the result is slower than pure C++, but the margin will not always be so large.  And in most real-world cases, you'll get to take advantage of the ease of data cleaning in R instead of C++.
 
 * Footnotes
 [fn:2]High and low level means how far the code is from the machine.  Think of the machine as the base.  Higher level languages are farther from the machine than lower level languages. 
