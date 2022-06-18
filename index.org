@@ -14,7 +14,7 @@ Higher level languages such as /R/ and /Python/ are easy and quick to write, tho
 
 Let's look at the performance of the sumall function across C++, R, and Python.  Given an integer argument /x/, the function sums all the integers from 1 to /x/.
 
-$$sumall(x) = \sum_{i = 1}^x$$
+$$sumall(x) = \sum_{i = 1}^x{i}$$
 
 We'll implement this function using recursion below.  
 
