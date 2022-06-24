@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-06-18 Sat 14:57 -->
+<!-- 2022-06-24 Fri 11:03 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>An Intro to Rcpp</title>
@@ -44,22 +44,22 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org132ab6e">1. Sumall</a>
+<li><a href="#org5a76422">1. Sumall</a>
 <ul>
-<li><a href="#orgde6e103">1.1. C++</a></li>
-<li><a href="#org57906da">1.2. R</a></li>
-<li><a href="#orgd3a4662">1.3. RCpp</a></li>
+<li><a href="#org384c392">1.1. C++</a></li>
+<li><a href="#org2889429">1.2. R</a></li>
+<li><a href="#orgd94290f">1.3. RCpp</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 <p>
-Higher level languages such as <i>R</i> and <i>Python</i> are easy and quick to write, though they are slow when executed<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>.  Lower level languages<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>, such as <i>C</i> and <i>C++</i> take more time to write, but create binaries which are considerably faster when executes.  So often high level languages are used to prototype an idea, but once you know what you want to do it is implemented in a lower level language.
+Higher level languages such as <i>R</i> and <i>Python</i> are easy and quick to write, though they are slow when executed<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>.  Lower level languages<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>, such as <i>C</i> and <i>C++</i> take more time to write, but create binaries which are considerably faster when executed.  So often high level languages are used to prototype an idea, but once you know what you want to do it is implemented in a lower level language.
 </p>
 
-<div id="outline-container-org132ab6e" class="outline-2">
-<h2 id="org132ab6e"><span class="section-number-2">1.</span> Sumall</h2>
+<div id="outline-container-org5a76422" class="outline-2">
+<h2 id="org5a76422"><span class="section-number-2">1.</span> Sumall</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Let's look at the performance of the sumall function across C++, R, and Python.  Given an integer argument <i>x</i>, the function sums all the integers from 1 to <i>x</i>.
@@ -74,42 +74,42 @@ We'll implement this function using recursion below.
 </p>
 </div>
 
-<div id="outline-container-orgde6e103" class="outline-3">
-<h3 id="orgde6e103"><span class="section-number-3">1.1.</span> C++</h3>
+<div id="outline-container-org384c392" class="outline-3">
+<h3 id="org384c392"><span class="section-number-3">1.1.</span> C++</h3>
 <div class="outline-text-3" id="text-1-1">
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #ff0000;">// </span><span style="color: #ff0000;">timing structure from here: https://stackoverflow.com/questions/22387586/measuring-execution-time-of-a-function-in-c</span>
-<span style="color: #0000ff; font-weight: bold;">#include</span> <span style="color: #00ff00;">&lt;chrono&gt;</span>
+<pre class="src src-C++"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">timing structure from here: https://stackoverflow.com/questions/22387586/measuring-execution-time-of-a-function-in-c</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;chrono&gt;</span>
 
-<span style="color: #ff0000;">/* </span><span style="color: #ff0000;">Only needed for the sake of this example.</span><span style="color: #ff0000;"> */</span>
-<span style="color: #0000ff; font-weight: bold;">#include</span> <span style="color: #00ff00;">&lt;iostream&gt;</span>
-<span style="color: #0000ff; font-weight: bold;">#include</span> <span style="color: #00ff00;">&lt;thread&gt;</span>
+<span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Only needed for the sake of this example.</span><span style="color: #5B6268;"> */</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;iostream&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;thread&gt;</span>
 
-<span style="color: #00ff00;">int</span> <span style="color: #0000ff; font-weight: bold;">sumall</span>(<span style="color: #00ff00;">int</span> <span style="color: #ffff00;">x</span>)
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">sumall</span>(<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">x</span>)
 {
-  <span style="color: #00ffff; font-weight: bold;">if</span>(x == 1)
-    {<span style="color: #00ffff; font-weight: bold;">return</span> 1;}
-  <span style="color: #00ffff; font-weight: bold;">else</span>
-    {<span style="color: #00ffff; font-weight: bold;">return</span> x + sumall(x - 1);}
+  <span style="color: #51afef;">if</span>(x == 1)
+    {<span style="color: #51afef;">return</span> 1;}
+  <span style="color: #51afef;">else</span>
+    {<span style="color: #51afef;">return</span> x + sumall(x - 1);}
 }
 
-<span style="color: #00ff00;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span>()
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span>()
 {
-    <span style="color: #00ffff; font-weight: bold;">using</span> <span style="color: #ff00ff;">std</span>::<span style="color: #ff00ff;">chrono</span>::<span style="color: #ff00ff;">high_resolution_clock</span>;
-    <span style="color: #00ffff; font-weight: bold;">using</span> <span style="color: #ff00ff;">std</span>::<span style="color: #ff00ff;">chrono</span>::<span style="color: #ff00ff;">duration_cast</span>;
-    <span style="color: #00ffff; font-weight: bold;">using</span> <span style="color: #ff00ff;">std</span>::<span style="color: #ff00ff;">chrono</span>::<span style="color: #ff00ff;">duration</span>;
-    <span style="color: #00ffff; font-weight: bold;">using</span> <span style="color: #ff00ff;">std</span>::<span style="color: #ff00ff;">chrono</span>::<span style="color: #ff00ff;">milliseconds</span>;
+    <span style="color: #51afef;">using</span> <span style="color: #a9a1e1;">std</span>::<span style="color: #a9a1e1;">chrono</span>::<span style="color: #a9a1e1;">high_resolution_clock</span>;
+    <span style="color: #51afef;">using</span> <span style="color: #a9a1e1;">std</span>::<span style="color: #a9a1e1;">chrono</span>::<span style="color: #a9a1e1;">duration_cast</span>;
+    <span style="color: #51afef;">using</span> <span style="color: #a9a1e1;">std</span>::<span style="color: #a9a1e1;">chrono</span>::<span style="color: #a9a1e1;">duration</span>;
+    <span style="color: #51afef;">using</span> <span style="color: #a9a1e1;">std</span>::<span style="color: #a9a1e1;">chrono</span>::<span style="color: #a9a1e1;">milliseconds</span>;
 
-    <span style="color: #00ffff; font-weight: bold;">auto</span> <span style="color: #ffff00;">t1</span> = <span style="color: #ff00ff;">high_resolution_clock</span>::now();
-    <span style="color: #00ff00;">int</span> <span style="color: #ffff00;">answer</span> = sumall(99999);
-    <span style="color: #00ffff; font-weight: bold;">auto</span> <span style="color: #ffff00;">t2</span> = <span style="color: #ff00ff;">high_resolution_clock</span>::now();
+    <span style="color: #51afef;">auto</span> <span style="color: #dcaeea;">t1</span> = <span style="color: #a9a1e1;">high_resolution_clock</span>::now();
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">answer</span> = sumall(99999);
+    <span style="color: #51afef;">auto</span> <span style="color: #dcaeea;">t2</span> = <span style="color: #a9a1e1;">high_resolution_clock</span>::now();
 
-    <span style="color: #ff0000;">/* </span><span style="color: #ff0000;">Getting number of milliseconds as a double.</span><span style="color: #ff0000;"> */</span>
-    <span style="color: #00ff00;">duration</span>&lt;<span style="color: #00ff00;">double</span>, <span style="color: #ff00ff;">std</span>::milli&gt; <span style="color: #ffff00;">ms_double</span> = t2 - t1;
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Getting number of milliseconds as a double.</span><span style="color: #5B6268;"> */</span>
+    <span style="color: #ECBE7B;">duration</span>&lt;<span style="color: #ECBE7B;">double</span>, <span style="color: #a9a1e1;">std</span>::milli&gt; <span style="color: #dcaeea;">ms_double</span> = t2 - t1;
 
-    <span style="color: #ff00ff;">std</span>::cout &lt;&lt; <span style="color: #00ff00;">"The answer is "</span> &lt;&lt; answer &lt;&lt; <span style="color: #00ff00;">"\n"</span>;
-    <span style="color: #ff00ff;">std</span>::cout &lt;&lt; <span style="color: #00ff00;">"The calculation took "</span> &lt;&lt; ms_double.count() &lt;&lt; <span style="color: #00ff00;">"ms\n"</span>;
-    <span style="color: #00ffff; font-weight: bold;">return</span> 0;
+    <span style="color: #a9a1e1;">std</span>::cout &lt;&lt; <span style="color: #98be65;">"The answer is "</span> &lt;&lt; answer &lt;&lt; <span style="color: #98be65;">"\n"</span>;
+    <span style="color: #a9a1e1;">std</span>::cout &lt;&lt; <span style="color: #98be65;">"The calculation took "</span> &lt;&lt; ms_double.count() &lt;&lt; <span style="color: #98be65;">"ms\n"</span>;
+    <span style="color: #51afef;">return</span> 0;
 }
 </pre>
 </div>
@@ -138,7 +138,7 @@ We'll implement this function using recursion below.
 <td class="org-left">The</td>
 <td class="org-left">calculation</td>
 <td class="org-left">took</td>
-<td class="org-right">1.2352ms</td>
+<td class="org-right">1.14802ms</td>
 </tr>
 </tbody>
 </table>
@@ -149,20 +149,20 @@ So the calculation of <i>sumall(999999)</i> takes 1.23 milliseconds.
 </div>
 </div>
 
-<div id="outline-container-org57906da" class="outline-3">
-<h3 id="org57906da"><span class="section-number-3">1.2.</span> R</h3>
+<div id="outline-container-org2889429" class="outline-3">
+<h3 id="org2889429"><span class="section-number-3">1.2.</span> R</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
-<pre class="src src-R">start.time <span style="color: #ff00ff;">&lt;-</span> Sys.time()
-<span style="color: #0000ff; font-weight: bold;">sumall</span> <span style="color: #ff00ff;">&lt;-</span> <span style="color: #00ffff; font-weight: bold;">function</span>(x){
-<span style="color: #00ffff; font-weight: bold;">if</span> (x == 1)
-{<span style="color: #00ffff; font-weight: bold;">return</span>(1)}
-<span style="color: #00ffff; font-weight: bold;">else</span>
-{<span style="color: #00ffff; font-weight: bold;">return</span>(x + sumall(x - 1))}
+<pre class="src src-R">start.time <span style="color: #a9a1e1;">&lt;-</span> Sys.time()
+<span style="color: #c678dd;">sumall</span> <span style="color: #a9a1e1;">&lt;-</span> <span style="color: #51afef;">function</span>(x){
+<span style="color: #51afef;">if</span> (x == 1)
+{<span style="color: #51afef;">return</span>(1)}
+<span style="color: #51afef;">else</span>
+{<span style="color: #51afef;">return</span>(x + sumall(x - 1))}
 }
 sumall(99999)
-end.time <span style="color: #ff00ff;">&lt;-</span> Sys.time()
-time.taken <span style="color: #ff00ff;">&lt;-</span> end.time - start.time
+end.time <span style="color: #a9a1e1;">&lt;-</span> Sys.time()
+time.taken <span style="color: #a9a1e1;">&lt;-</span> end.time - start.time
 time.taken
 </pre>
 </div>
@@ -179,18 +179,18 @@ So the calculation of <i>sumall(99999)</i> is not possible in <i>R</i>, at least
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #00ffff; font-weight: bold;">import</span> time
+<pre class="src src-python"><span style="color: #51afef;">import</span> time
 
-<span style="color: #ffff00;">start</span> = time.time()
-<span style="color: #00ffff; font-weight: bold;">def</span> <span style="color: #0000ff; font-weight: bold;">sumall</span>(x):
-    <span style="color: #00ffff; font-weight: bold;">if</span> x == 1:
-        <span style="color: #00ffff; font-weight: bold;">return</span>(1)
-    <span style="color: #00ffff; font-weight: bold;">else</span>:
-        <span style="color: #00ffff; font-weight: bold;">return</span>(x + sumall(x - 1))
+<span style="color: #dcaeea;">start</span> = time.time()
+<span style="color: #51afef;">def</span> <span style="color: #c678dd;">sumall</span>(x):
+    <span style="color: #51afef;">if</span> x == 1:
+        <span style="color: #51afef;">return</span>(1)
+    <span style="color: #51afef;">else</span>:
+        <span style="color: #51afef;">return</span>(x + sumall(x - 1))
 
 sumall(99999)
 end = time.time()
-<span style="color: #0000ff; font-weight: bold;">print</span>(end - start)
+<span style="color: #c678dd;">print</span>(end - start)
 </pre>
 </div>
 
@@ -207,38 +207,38 @@ Again, the calculation of <i>sumall(99999)</i> is not possible in <i>Python</i>,
 </div>
 </div>
 
-<div id="outline-container-orgd3a4662" class="outline-3">
-<h3 id="orgd3a4662"><span class="section-number-3">1.3.</span> RCpp</h3>
+<div id="outline-container-orgd94290f" class="outline-3">
+<h3 id="orgd94290f"><span class="section-number-3">1.3.</span> RCpp</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Now let's implement <i>sumall</i> in RCpp.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R"><span style="color: #ff00ff;">library</span>(Rcpp)
+<pre class="src src-R"><span style="color: #a9a1e1;">library</span>(Rcpp)
 
-start.time <span style="color: #ff00ff;">&lt;-</span> Sys.time()
-cppFunction(<span style="color: #00ff00;">'int sumall(int x)</span>
-<span style="color: #00ff00;">{</span>
-<span style="color: #00ff00;">  if(x == 1)</span>
-<span style="color: #00ff00;">    {return 1;}</span>
-<span style="color: #00ff00;">  else</span>
-<span style="color: #00ff00;">    {return x + sumall(x - 1);}</span>
-<span style="color: #00ff00;">}</span>
-<span style="color: #00ff00;">'</span>)
+start.time <span style="color: #a9a1e1;">&lt;-</span> Sys.time()
+cppFunction(<span style="color: #98be65;">'int sumall(int x)</span>
+<span style="color: #98be65;">{</span>
+<span style="color: #98be65;">  if(x == 1)</span>
+<span style="color: #98be65;">    {return 1;}</span>
+<span style="color: #98be65;">  else</span>
+<span style="color: #98be65;">    {return x + sumall(x - 1);}</span>
+<span style="color: #98be65;">}</span>
+<span style="color: #98be65;">'</span>)
 
-print(paste0(<span style="color: #00ff00;">"The value of sumall(99999) is "</span>, sumall(99999)))
+print(paste0(<span style="color: #98be65;">"The value of sumall(99999) is "</span>, sumall(99999)))
 
-end.time <span style="color: #ff00ff;">&lt;-</span> Sys.time()
-time.taken <span style="color: #ff00ff;">&lt;-</span> end.time - start.time
-print(paste0(<span style="color: #00ff00;">"And it took "</span>, round(time.taken, 2), <span style="color: #00ff00;">" seconds."</span>))
+end.time <span style="color: #a9a1e1;">&lt;-</span> Sys.time()
+time.taken <span style="color: #a9a1e1;">&lt;-</span> end.time - start.time
+print(paste0(<span style="color: #98be65;">"And it took "</span>, round(time.taken, 2), <span style="color: #98be65;">" seconds."</span>))
 
 </pre>
 </div>
 
 <pre class="example">
 [1] "The value of sumall(99999) is 704982704"
-[1] "And it took 3.89 seconds."
+[1] "And it took 3.9 seconds."
 </pre>
 
 
@@ -265,7 +265,7 @@ High and low level means how far the code is from the machine.  Think of the mac
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Matt Brigida, Ph.D.</p>
-<p class="date">Created: 2022-06-18 Sat 14:57</p>
+<p class="date">Created: 2022-06-24 Fri 11:03</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

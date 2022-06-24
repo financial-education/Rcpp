@@ -8,7 +8,7 @@
 # #+options: toc:nil
 
 
-Higher level languages such as /R/ and /Python/ are easy and quick to write, though they are slow when executed[fn:1].  Lower level languages[fn:2], such as /C/ and /C++/ take more time to write, but create binaries which are considerably faster when executes.  So often high level languages are used to prototype an idea, but once you know what you want to do it is implemented in a lower level language.
+Higher level languages such as /R/ and /Python/ are easy and quick to write, though they are slow when executed[fn:1].  Lower level languages[fn:2], such as /C/ and /C++/ take more time to write, but create binaries which are considerably faster when executed.  So often high level languages are used to prototype an idea, but once you know what you want to do it is implemented in a lower level language.
 
 * Sumall
 
